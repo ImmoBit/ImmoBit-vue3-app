@@ -168,7 +168,7 @@ export default defineComponent({
       //Dispatch search action
       searchStore.searchQuery = searchStr
       let url = route.path;
-      searchStore.getHouses(searchStore.searchQueryWithPage)
+      await searchStore.getHouses(searchStore.searchQueryWithPage)
 
       //Going to list page
       if (url != "/list") router.push("/list");

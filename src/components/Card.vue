@@ -1,21 +1,22 @@
 <template>
   <v-hover v-slot="{ hover }">
-    <v-card @click="goHousePage"  height="250" shaped :elevation="hover ? 12 : 2">
+    <v-card rounded="be-xl" height="250" :elevation="hover ? 12 : 2">
       <v-container fluid class="pa-0">
-        <v-row class="ma-0 pa-0">
-          <v-col class="ma-0 pa-0" cols="5">
-            <v-img :src="images[0]"></v-img>
-            <!--<v-carousel height="250" show-arrows="hover">
+        <v-row>
+          <v-col cols="5">
+            <v-carousel preload height="250" hide-delimiters show-arrows="hover">
               <v-carousel-item
-                v-for="(image, i) in images"
+                v-for="i in 5"
                 :key="i"
-                :src="image"
+                eager
                 cover
-              ></v-carousel-item>
-            </v-carousel>-->
+              >
+                <v-img cover :src="$props.house.images[i]" width="100%" height="100%" eager/>
+              </v-carousel-item>
+            </v-carousel>
           </v-col>
-          <v-col class="pb-0">
-            <v-container fill-height>
+          <v-col @click="goHousePage">
+            <v-container class="fill-height flex-column align-stretch">
               <v-row>
                 <v-col>
                   <div class="text--secondary title">{{ $props.house.type }} à {{ $props.house.daira }}</div>
@@ -30,9 +31,9 @@
                 </v-col>
               </v-row>
               <!-- heart icon, price -->
-              <v-row align="end">
+              <v-row align="end" justify="end">
                 <v-col align="end">
-                  <v-btn color="alert" icon @click.stop="updateSavedHouse">
+                  <v-btn color="alert" variant="text" icon @click.stop="updateSavedHouse">
                     <v-icon outline>
                       {{ saved ? "mdi-heart" : "mdi-heart-outline" }}
                     </v-icon>
@@ -48,8 +49,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, onBeforeMount } from "vue";
-import { filesToBase64, urlsToFiles, formatPrice } from '@/helpers/helpers';
+import { defineComponent, ref, computed } from "vue";
+import { formatPrice } from '@/helpers/helpers';
 import { useSavedHousesStore } from "@/stores/savedHouses";
 import type { IHouse, ISavedHouse } from '@/models/models'
 import { useRouter } from "vue-router";
@@ -71,12 +72,13 @@ export default defineComponent({
     })
 
     onMounted(async () => {
-      let imagesFiles: string[] = []
       for (let i = 0; i < 5; i++) {
-        imagesFiles = [...imagesFiles, props.house.images[i]];
+        var highResImage = new Image();
+        highResImage.onload = function () {
+          images.value[i] = props.house.images[i] as any
+        }
+        highResImage.src = props.house.images[i]
       }
-      const files = await urlsToFiles(imagesFiles) as File[]
-      images.value = filesToBase64(files)
     })
 
     async function updateSavedHouse() {

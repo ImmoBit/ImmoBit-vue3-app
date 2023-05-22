@@ -24,10 +24,11 @@ export async function urlsToFiles(urls: string[]) {
 }
 
 export function filesToBase64(files: File[]) {
-  const imgsSrc: string[] = [];
+  const imgsSrc: any[] = [];
   for (const file of files) {
     const reader = new FileReader();
     reader.onload = event => {
+      console.log(event.target?.result);
       imgsSrc.push((event.target as any).result)
     };
     reader.readAsDataURL(file);

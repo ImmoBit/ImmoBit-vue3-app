@@ -33,7 +33,7 @@ export const useSearchStore = defineStore('search', () => {
     house.value = data
   }
   return {
-    searchQuery, filterQuery, houses, house, housesCount, pageSize, page, loading, address,
+    searchQuery, filterQuery, houses, housesCount, pageSize, page, loading, address,
     pageCount, searchQueryWithPage,
     getHouses, getHouse
   }

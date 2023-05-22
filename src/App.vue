@@ -1,17 +1,17 @@
 <template>
   <v-app>
     <v-app-bar class="pa-0" color="#ECEFF1" height="80" app fixed>
-      <v-container :fluid="$vuetify.display.xs" class="pa-0">
+      <v-container :fluid="$vuetify.display.mobile" class="py-0 px-4">
         <v-row align="center" class="ma-0">
           <!-- Logo -->
-          <v-col class="pl-0" :cols="$vuetify.display.xs ? 3 : 1" @click="goHome">
-            <!-- <v-img :src="logo" alt="logo"></v-img>-->
+          <v-col class="pl-0" :cols="$vuetify.display.mobile ? 3 : 1" @click="goHome">
+             <v-img :src="logo" alt="logo"></v-img>
           </v-col>
 
           <!-- Title -->
-          <v-col cols="2" v-if="!$vuetify.display.xs" @click="goHome" class="pa-0" >
-            <span color="#80c8F1" class="display-1">Immo</span>
-            <span color="#F69C65" class="display-1">Bit</span>
+          <v-col cols="2" v-if="!$vuetify.display.mobile" @click="goHome" class="pa-0" >
+            <span style="color: #80c8F1;" class="text-h4">Immo</span>
+            <span style="color: #F69C65;" class="text-h4">Bit</span>
           </v-col>        
             <!--Create a house button-->
           <v-col v-if="!authenticated && homePage" align="center" align-self="center" cols="2">
@@ -27,7 +27,7 @@
           <!-- save,sign in/up section -->
           <v-col class="pa-0" align="end" cols="6">
             <v-menu
-              v-if="!$vuetify.display.xs && savedHouses.length !== 0"
+              v-if="!$vuetify.display.mobile && savedHouses.length !== 0"
               eager
               id="menu"
               offset-x
@@ -125,7 +125,7 @@
       <transition name="slide-fade" mode="out-in">
         <router-view></router-view>
       </transition>
-      <v-bottom-navigation hide-on-scroll v-if="$vuetify.display.xs && !homePage" fixed color="indigo">
+      <v-bottom-navigation hide-on-scroll v-if="$vuetify.display.mobile && !homePage" fixed color="indigo">
         <v-btn @click="goHome">
           <span>Recherche</span>
           <v-icon> mdi-magnify </v-icon>
@@ -140,7 +140,7 @@
         </v-btn>
       </v-bottom-navigation>
     </v-main>
-    <v-footer class="footer d-flex flex-column align-center" :style="$vuetify.display.xs && !homePage ? 'margin-bottom: 60px' : ''">
+    <v-footer class="footer d-flex flex-column align-center" :style="$vuetify.display.mobile && !homePage ? 'margin-bottom: 60px' : ''">
       <div class="terms-privacy pa-4">
         <!--<router-link class="pa-4" :to="{ name: 'terms' }">
           terms
@@ -163,16 +163,17 @@ import { computed, defineComponent, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import { useSavedHousesStore } from '@/stores/savedHouses'
+import logo from '@/assets/Immobit-logo.png'
+import FiltersBar from '@/components/FiltersBar.vue';
 
 export default defineComponent({
+  components: { FiltersBar },
   name: 'HomeView',
   setup() {
     const route = useRoute()
     const router = useRouter()
     const authStore = useAuthStore()
     const savedHousesStore = useSavedHousesStore()
-    //const logo = await import("@/assets/Immobit-logo.png")
-    //const immoArab = await import("@/assets/cart-houses.png")
     const saved = ref(false)
     const dialog1 = ref(false)
     const dialog2 = ref(false)
@@ -207,13 +208,56 @@ export default defineComponent({
     return {
       saved, dialog1, dialog2,
       goList, goHome, logout,
-      savedHouses, authenticated, homePage, isListPage
+      savedHouses, authenticated, homePage, isListPage,
+      logo
     }
   }
 })
-
-
-
 </script>
 
-<style scoped></style>
+<style lang="scss">
+.slide-fade-enter {
+  transform: translateX(15px);
+  opacity: 0;
+}
+
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.2s ease-out;
+}
+
+.slide-fade-leave-to {
+  transform: translateX(-15px);
+  opacity: 0;
+}
+
+.v-btn {
+  text-transform: none;
+}
+
+.bounce-enter-active {
+  animation: bounce-in .5s;
+}
+
+.bounce-leave-active {
+  animation: bounce-in .5s reverse;
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+
+  50% {
+    transform: scale(1.5);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.saved-houses {
+  z-index: 10;
+}
+</style>
