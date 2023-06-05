@@ -15,6 +15,7 @@ export const useSearchStore = defineStore('search', () => {
   const page = ref(1)
   const loading = ref(false)
   const address = ref('')
+  const controller = ref(new AbortController())
 
   //Getters
   const pageCount = computed(() => Math.ceil(housesCount.value / pageSize.value))
@@ -23,7 +24,10 @@ export const useSearchStore = defineStore('search', () => {
 
   //Functions
   async function getHouses(searchStr: string) {
-    const data = await searchRequests.getHousesReq(searchStr);
+    if (loading.value)
+      controller.value.abort()
+    controller.value = new AbortController();
+    const data = await searchRequests.getHousesReq(searchStr, controller.value);
     houses.value = data.results
     housesCount.value = data.count
   }

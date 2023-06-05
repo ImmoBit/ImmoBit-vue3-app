@@ -1,4 +1,10 @@
 $body-font-family: 'Rubik', sans-serif;
-$font-size-root: 16px;
-$input-font-size: 14px;
+$font-size-root: 1rem;
+$input-font-size: 0.875rem;
 
+body {
+  font-family: $body-font-family;
+  font-size: $font-size-root;
+  input {
+    font-size: $input-font-size;
+  }}

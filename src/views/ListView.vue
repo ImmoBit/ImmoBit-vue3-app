@@ -1,7 +1,7 @@
 <template>
   <FiltersBar class="filters-card"></FiltersBar>
   <v-container ref="card" :class="`mt-16 ${loading ? 'loading' : ''} ${$vuetify.display.mobile ? 'px-0 my-0' : ''}`">
-    <div class="text-subtitle-1 pa-4 text-medium-emphasis">
+    <div class="text-h6 pa-4 text-medium-emphasis font-weight-medium">
       {{ housesCount }} annonce(s) trouvées {{ address ? `à ${address}` : `` }}
     </div>
     <v-row style="min-height: 300px" no-gutters>

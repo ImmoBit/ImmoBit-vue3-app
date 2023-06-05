@@ -1,21 +1,22 @@
 <template>
-  <v-sheet color="white" elevation="1">
+  <v-sheet class="filter-bar" color="white" elevation="1">
     <v-container>
       <!-- Rooms -->
       <v-row no-gutters>  
         <div class="d-flex flex-column justify-center">
-          <v-menu v-model="menuRooms">
+          <v-menu v-model="menuRooms" :close-on-content-click="false">
             <template v-slot:activator="{ props }">
               <v-btn
                 class="btn-menu"
                 light
-                color="#455A64"
+                :color="selectedRooms.length ? 'primary' : '#455A64'"
                 size="small"
                 rounded
-                variant="outlined"
+                :variant="selectedRooms.length ? 'tonal' : 'outlined'"
                 v-bind="props"
-                >Chambres
-                <v-icon>mdi-menu-down</v-icon>
+                append-icon="mdi-menu-down"
+                >
+                {{ selectedRooms.length ? selectedRooms.join(', ') : 'Chambres' }}
               </v-btn>
             </template>
             <v-card class="rooms-wrapper">
@@ -38,13 +39,13 @@
             <template v-slot:activator="{ props }">
               <v-btn
                 class="btn-menu"
-                color="#455A64"
+                :color="selectedRange ? 'primary' : '#455A64'"
                 size="small"
                 rounded
-                variant="outlined"
+                :variant="selectedRange ? 'tonal' : 'outlined'"
                 v-bind="props"
-                >Prix
-                <v-icon>mdi-menu-down</v-icon>
+                append-icon="mdi-menu-down"
+                > {{ selectedRange ? formatRange(selectedRange) : 'Prix' }}
               </v-btn>
             </template>
             <v-card class="px-3 pt-2">
@@ -54,7 +55,7 @@
                   v-for="(priceRange, i) in priceRanges"
                   :key="i"
                   class="radioInput"
-                  :label="priceRange.min + ' - ' + priceRange.max + ` ${paymentFormat}`"
+                  :label="formatRange(priceRange)"
                   :value="priceRange"
                 >
                 </v-radio>
@@ -63,23 +64,12 @@
           </v-menu>
         </div>
       </v-row>
-      <v-row>
-        <div class="rooms-chips mx-3">
-          <v-chip class="mx-1" color="#37474F" v-for="(chipRooms, i) in chipsRooms.slice(0, 2)" size="small" :key="i">
-            <span>{{ chipRooms }}</span>
-          </v-chip>  
-          <span v-if="chipsRooms.length >= 3" class="grey--text text-caption">
-            (+{{ chipsRooms.length - 2 }})
-          </span>
-        </div> 
-        <v-divider vertical></v-divider> 
-        <div class="price-chip mx-3">
-          <v-chip color="#37474F" v-if="chipPrice" size="small">
-            <span>{{ chipPrice.min }} - {{ chipPrice.max }} {{ paymentFormat }}</span>
-          </v-chip>
-        </div>
-      </v-row>
     </v-container>
+    <v-progress-linear
+      v-show="loading"
+      :indeterminate="loading"
+      color="primary"
+    ></v-progress-linear>
   </v-sheet>
 </template>
 
@@ -105,11 +95,11 @@ export default defineComponent({
       { min: "100 000", max: "200 000" }
     ])
     const paymentFormat = ref('دج')
-    const loading = ref(false)
     const timeout = ref<number | null>(null)
     const menuRooms = ref(false)
     const menuPrice = ref(false)
 
+    const loading = computed(() => searchStore.loading)
     const searchStr = computed(() => searchStore.searchQuery)
     const selectedFilters = computed(() => {
       let filtersStr = ""
@@ -161,15 +151,13 @@ export default defineComponent({
       chipPrice.value = selectedRange.value
       searchStore.loading = false
     }
+    function formatRange(priceRange: { min: string, max: string }) {
+      return priceRange.min + ' - ' + priceRange.max + ` ${paymentFormat.value}`
+    }
 
     watchEffect(() => {
       if (selectedFilters.value) {
-        if (timeout.value) {
-          clearTimeout(timeout.value);
-        }
-        timeout.value = setTimeout(() => {
-          filterHouses();
-        }, 1000);
+        filterHouses();
       }
     })
 
@@ -189,20 +177,36 @@ export default defineComponent({
     return {
       roomsItems, selectedRooms, selectedRange, priceRanges,
       chipsRooms, chipPrice, paymentFormat, menuRooms, menuPrice,
-      filterHouses
+      loading,
+      filterHouses, formatRange
     }
   }
 })
 </script>
-<style scoped>
-.btn-menu {
-  text-transform: none;
-  margin-right: 12px;
+<style lang="scss">
+.filter-bar {
+  .btn-menu {
+    text-transform: none;
+    margin-right: 12px;
+    max-width: 7rem;
+    min-width: 5rem;
+
+    .v-btn__content {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      justify-content: start;
+      max-width: 5rem;
+    }
+  }
 }
 
-.rooms-wrapper {
-  display: grid;
-  grid-template-rows: 2.5rem 2.5rem 2.5rem 2.5rem;
-  grid-template-columns: 6rem 6rem;
+.v-card {
+  &.rooms-wrapper {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: 2.5rem 2.5rem 2.5rem 2.5rem;
+    grid-template-columns: 7rem 7rem;
+  }
 }
 </style>

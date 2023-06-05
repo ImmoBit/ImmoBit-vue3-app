@@ -39,9 +39,8 @@
           <div class="text-caption align-self-end ml-1 mb-1">{{ house.paymentFormat }}</div>
         </div>
       </div>
-     
     </v-carousel>
-    <v-card-text @click="goHousePage" class="text-medium-emphasis pb-0">
+    <v-card-text class="text-medium-emphasis pb-0">
       <div class="text-body-1 d-flex align-end">
         <v-icon>mdi-map-marker</v-icon>
         <div class="font-regular text-high-emphasis align-start">{{ $props.house.address }}</div>

@@ -13,19 +13,25 @@
               >
                 <v-img cover :src="$props.house.images[i]" width="100%" height="100%" eager/>
               </v-carousel-item>
+              <div @click="goHousePage" class="carousel-container d-flex flex-column justify-end">
+                <div class="price text-white d-flex pa-2">
+                  <div class="text-h6 font-weight-bold ml-2">• {{ formatPrice($props.house.price) }}</div>
+                  <div class="text-caption mx-1">{{ house.paymentFormat }}</div>
+                </div>
+              </div>
             </v-carousel>
           </v-col>
           <v-col @click="goHousePage">
             <v-container class="fill-height flex-column align-stretch">
               <v-row>
                 <v-col>
-                  <div class="text--secondary title">{{ $props.house.type }} à {{ $props.house.daira }}</div>
+                  <div class="text-medium-emphasis text-subtitle-1">{{ $props.house.type }} à {{ $props.house.daira }}</div>
                   <v-divider></v-divider>
-                  <div class="font-weight-normal ml-3 mt-3">
-                    <v-icon class="pb-1 mr-1 ml-1">mdi-map-marker</v-icon
+                  <div class="font-weight-normal ml-3 mt-2">
+                    <v-icon class="text-medium-emphasis pb-1 mr-1 ml-1">mdi-map-marker</v-icon
                     >{{ $props.house.address }}
                   </div>
-                  <div v-if="house.type != 'Studio'" class="text--secondary body-2 ml-10">
+                  <div v-if="house.type != 'Studio'" class="text-medium-emphasis text-body-2 ml-10">
                     • {{ house.rooms }} Chambres
                   </div>
                 </v-col>
@@ -99,7 +105,13 @@ export default defineComponent({
 </script>
 
 <style scoped>
-#price {
+.carousel-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.price {
   min-width: 400px;
   background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(255, 255, 255, 0));
 }

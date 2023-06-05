@@ -34,8 +34,8 @@
               :close-on-content-click="false"
               :disabled="savedHouses.length == 0"
             >
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn v-bind="attrs" v-on="on" class="mt-6" large icon>
+              <template v-slot:activator="{ props }">
+                <v-btn v-bind="props" class="mt-6" large icon>
                   <v-icon>mdi-heart</v-icon>
                   <v-badge
                     eager
@@ -55,44 +55,44 @@
             </v-menu>
 
             <v-menu eager v-if="!authenticated" offset-y>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn class="mt-6" icon large v-bind="attrs" v-on="on">
+              <template v-slot:activator="{ props }">
+                <v-btn class="mt-6" icon large v-bind="props">
                   <v-icon>mdi-account-circle</v-icon>
                 </v-btn>
               </template>
               <v-list>
                 <v-list-item>
                   <v-dialog persistent max-width="350" v-model="dialog1">
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-list-item-title v-bind="attrs" v-on="on">
+                    <template v-slot:activator="{ props }">
+                      <v-list-item-title v-bind="props">
                         Créer un compte
                       </v-list-item-title>
                     </template>
-                    <!--<sign-up
+                    <sign-up
                       v-if="dialog1"
                       @dialog-false="dialog1 = false"
-                    ></sign-up>-->
+                    ></sign-up>
                   </v-dialog>
                 </v-list-item>
 
                 <v-list-item>
                   <v-dialog persistent max-width="350" v-model="dialog2">
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-list-item-title v-bind="attrs" v-on="on">
+                    <template v-slot:activator="{ props }">
+                      <v-list-item-title v-bind="props">
                         Se connecter                       
                       </v-list-item-title>
                     </template>
-                    <!--<sign-in
+                    <sign-in
                       v-if="dialog2"
                       @dialog-false="dialog2 = false"
-                    ></sign-in>-->
+                    ></sign-in>
                   </v-dialog>
                 </v-list-item>
               </v-list>
             </v-menu>
             <v-menu eager v-if="authenticated" offset-y>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn class="mt-6" icon large v-bind="attrs" v-on="on">
+              <template v-slot:activator="{ props }">
+                <v-btn class="mt-6" icon large v-bind="props">
                   <v-icon>mdi-account-circle</v-icon>
                 </v-btn>
               </template>
@@ -164,10 +164,10 @@ import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import { useSavedHousesStore } from '@/stores/savedHouses'
 import logo from '@/assets/Immobit-logo.png'
-import FiltersBar from '@/components/FiltersBar.vue';
+import SignIn from '@/components/auth/SignIn.vue';
 
 export default defineComponent({
-  components: { FiltersBar },
+  components: { SignIn },
   name: 'HomeView',
   setup() {
     const route = useRoute()
@@ -215,7 +215,7 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .slide-fade-enter {
   transform: translateX(15px);
   opacity: 0;
